@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -15,9 +13,9 @@ bool pressed(const sf::Event & ev, const sf::Keyboard::Key key) {
 
 int main(int argc, const char * argv[]) {
     sf::RenderWindow win {
-            sf::VideoMode(800, 600),
-            "My Window",
-            sf::Style::Titlebar | sf::Style::Close
+        sf::VideoMode(800, 600),
+        "My Window",
+        sf::Style::Titlebar | sf::Style::Close
     };
     sf::RectangleShape rect({100, 100});
     rect.setFillColor(sf::Color::Magenta);
