@@ -14,5 +14,5 @@ add_executable(
     a.out
 
     src/main.cpp
-
 )
+
