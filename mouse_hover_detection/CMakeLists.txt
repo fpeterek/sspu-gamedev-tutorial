@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(tmpl_project)
+project(mouse_hover_detection)
 
 set(CMAKE_CXX_STANDARD 17)
 

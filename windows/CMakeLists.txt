@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(tmpl_project)
+project(windows)
 
 set(CMAKE_CXX_STANDARD 17)
 
