@@ -30,11 +30,11 @@ class TextureLoader {
 public:
 
     void popSheet(const std::string & sheet);
-    void loadSheet(const std::string & sheet, sf::Vector2u texSize, uint texCount = -1);
+    const std::vector<sf::Texture> & loadSheet(const std::string & sheet, sf::Vector2u texSize, uint texCount = -1);
     const std::vector<sf::Texture> & getSheet(const std::string & sheet) const;
 
     void pop(const std::string & texture);
-    void load(const std::string & texture, sf::IntRect area = sf::IntRect());
+    const sf::Texture & load(const std::string & texture, sf::IntRect area = sf::IntRect());
     const sf::Texture & get(const std::string & texture) const;
 
     const sf::Texture & operator[](const T & texture) const;

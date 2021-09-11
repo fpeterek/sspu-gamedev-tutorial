@@ -2,7 +2,7 @@
 // Created by fpeterek on 09.09.21.
 //
 
-#include <texture_loader.hpp>
+#include "texture_loader.hpp"
 
 #include <cmath>
 
@@ -11,10 +11,11 @@ void TextureLoader::pop(const std::string & texture) {
     textures.erase(texture);
 }
 
-void TextureLoader::load(const std::string & texture, const sf::IntRect area) {
+const sf::Texture & TextureLoader::load(const std::string & texture, const sf::IntRect area) {
     const auto tex = std::make_shared<sf::Texture>();
     tex->loadFromFile(texture, area);
     textures[texture] = tex;
+    return *tex;
 }
 
 const sf::Texture & TextureLoader::get(const std::string & texture) const {
@@ -37,7 +38,9 @@ void TextureLoader::popSheet(const std::string & sheet) {
     sheets.erase(sheet);
 }
 
-void TextureLoader::loadSheet(const std::string & sheet, const sf::Vector2u texSize, const uint texCount) {
+const std::vector<sf::Texture> & TextureLoader::loadSheet(
+    const std::string & sheet, const sf::Vector2u texSize, const uint texCount) {
+
     sf::Image img;
     img.loadFromFile(sheet);
     const uint count = std::min(texCount, img.getSize().x / texSize.x);
@@ -52,6 +55,7 @@ void TextureLoader::loadSheet(const std::string & sheet, const sf::Vector2u texS
     }
 
     sheets[sheet] = vec;
+    return *vec;
 }
 
 
