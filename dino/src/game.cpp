@@ -9,7 +9,7 @@ Game::Game() :
     window(1920, 1080),
     ground {
         tl.load("resources/sand.png"),
-        tl[T("resources/sand.png")],
+        tl.load("resources/dirt.png"),
         { 1920, 256 },
         4.f
     } {

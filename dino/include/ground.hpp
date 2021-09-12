@@ -9,9 +9,8 @@
 
 class Ground : public sf::Drawable {
 
-    mutable sf::Sprite top;
-    mutable sf::Sprite bottom;
-    const float scale;
+    mutable sf::Sprite surface;
+    mutable sf::Sprite dirt;
     const sf::Vector2i dim;
     const sf::Vector2i tileDim;
 
@@ -25,7 +24,7 @@ public:
     void setLevel(float y);
     void move(float dx);
     void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-    Ground(const sf::Texture & top, const sf::Texture & bottom, sf::Vector2i dim, float scale);
+    Ground(const sf::Texture & surface, const sf::Texture & dirt, sf::Vector2i dim, float scale);
 
 };
 

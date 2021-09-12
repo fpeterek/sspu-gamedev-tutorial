@@ -6,13 +6,19 @@
 
 #include <cmath>
 
-SpriteCycler::SpriteCycler(const std::vector<sf::Texture> & texColl, const float per) :
+TextureCycler::TextureCycler(const std::vector<sf::Texture> & texColl, const float per) :
     textures(texColl), period(per) { }
 
-const sf::Texture & SpriteCycler::current() {
+const sf::Texture & TextureCycler::current() {
     return textures[size_t(period / t)];
 }
 
-void SpriteCycler::update(float dt) {
+void TextureCycler::update(float dt) {
     t = std::fmod(t+dt, period);
 }
+
+TextureCycler::TextureCycler(TextureCycler && rv) noexcept :
+    textures(rv.textures), period(rv.period), t(rv.t) { }
+
+TextureCycler::TextureCycler(const TextureCycler & other) :
+    textures(other.textures), period(other.period) { }

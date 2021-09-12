@@ -12,16 +12,16 @@ static sf::Vector2i calcDim(const sf::Vector2u texDim, const float scale) {
     return { int(texDim.x * scale), int(texDim.y * scale) };
 }
 
-Ground::Ground(const sf::Texture & topTex, const sf::Texture & botTex, sf::Vector2i dim, float scale) :
-    top(topTex), bottom(botTex), scale(scale), dim(dim), tileDim(calcDim(topTex.getSize(), scale)) {
-    top.setScale(scale, scale);
-    bottom.setScale(scale, scale);
+Ground::Ground(const sf::Texture & surfTex, const sf::Texture & dirtTex, sf::Vector2i dim, float scale) :
+    surface(surfTex), dirt(dirtTex), dim(dim), tileDim(calcDim(surfTex.getSize(), scale)) {
+    surface.setScale(scale, scale);
+    dirt.setScale(scale, scale);
 }
 
 void Ground::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-    drawLine(target, states, top, pos.y);
+    drawLine(target, states, surface, pos.y);
     for (int64_t yOffset = tileDim.y; yOffset < dim.y; yOffset += tileDim.y) {
-        drawLine(target, states, bottom, pos.y + (float)yOffset);
+        drawLine(target, states, dirt, pos.y + (float)yOffset);
     }
 }
 

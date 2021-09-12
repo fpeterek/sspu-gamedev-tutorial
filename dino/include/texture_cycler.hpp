@@ -9,13 +9,15 @@
 
 #include <SFML/Graphics.hpp>
 
-class SpriteCycler {
+class TextureCycler {
     const std::vector<sf::Texture> & textures;
     const float period;
     float t = 0;
 
 public:
-    SpriteCycler(const std::vector<sf::Texture> & textures, float period);
+    TextureCycler(const std::vector<sf::Texture> & textures, float period);
+    TextureCycler(TextureCycler && rv) noexcept;
+    TextureCycler(const TextureCycler & other);
     void update(float dt);
     const sf::Texture & current();
 };
