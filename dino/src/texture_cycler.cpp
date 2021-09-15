@@ -10,7 +10,7 @@ TextureCycler::TextureCycler(const std::vector<sf::Texture> & texColl, const flo
     textures(texColl), period(per) { }
 
 const sf::Texture & TextureCycler::current() {
-    return textures[size_t(period / t)];
+    return textures.get()[size_t(period / t)];
 }
 
 void TextureCycler::update(float dt) {
@@ -22,3 +22,10 @@ TextureCycler::TextureCycler(TextureCycler && rv) noexcept :
 
 TextureCycler::TextureCycler(const TextureCycler & other) :
     textures(other.textures), period(other.period) { }
+
+TextureCycler & TextureCycler::operator=(TextureCycler && rv) noexcept {
+    textures = rv.textures;
+    period = rv.period;
+    t = rv.t;
+    return *this;
+}

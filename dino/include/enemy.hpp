@@ -11,7 +11,7 @@
 
 #include "texture_cycler.hpp"
 
-class Enemy {
+class Enemy : public sf::Drawable {
 
     sf::Sprite sprite;
     TextureCycler textureCycler;
@@ -20,9 +20,16 @@ class Enemy {
 
 public:
 
+    Enemy(Enemy && rvalue) noexcept;
+    Enemy & operator=(Enemy && rvalue) noexcept;
+
     sf::FloatRect hitbox() const;
     void update(float dt);
     void move(sf::Vector2f delta);
+
+    void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+
+public:
 
     class Factory {
 

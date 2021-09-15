@@ -17,13 +17,30 @@ Enemy Enemy::Factory::create() {
     return createCactus();
 }
 
-// TODO: Fix position
 Enemy Enemy::Factory::createBird() {
-    return Enemy(bird, scale, { (float)windowWidth, (float)yRange.first }, { 14.f, 6.f });
+    std::uniform_int_distribution dist {
+        (int)yRange.first,
+        (int)std::round(yRange.second - cactus.current().getSize().y*scale - bird.current().getSize().y*scale)
+    };
+
+    const float y = dist(rand);
+
+    return {
+        bird,
+        scale,
+        { (float)windowWidth, y },
+        { 14 * scale, 6 * scale }
+    };
 }
 
 Enemy Enemy::Factory::createCactus() {
-    return Enemy(cactus, scale, { (float)windowWidth, (float)yRange.second }, { 10.f, 14.f });
+    const float y = yRange.second - cactus.current().getSize().y*scale;
+    return {
+        cactus,
+        scale,
+        { (float)windowWidth, y },
+        { 10 * scale, 14 * scale }
+    };
 }
 
 sf::FloatRect Enemy::hitbox() const {
@@ -50,5 +67,19 @@ Enemy::Enemy(TextureCycler cycler, float scale, sf::Vector2f position, sf::Vecto
     sprite.setTexture(textureCycler.current());
     sprite.setScale(scale, scale);
     sprite.setPosition(position);
+}
 
+Enemy::Enemy(Enemy && rvalue) noexcept :
+    sprite(std::move(rvalue.sprite)), textureCycler(std::move(rvalue.textureCycler)),
+    hitboxSize(rvalue.hitboxSize) { }
+
+void Enemy::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+    target.draw(sprite, states);
+}
+
+Enemy & Enemy::operator=(Enemy && other) noexcept {
+    sprite = other.sprite;
+    textureCycler = std::move(other.textureCycler);
+    hitboxSize = other.hitboxSize;
+    return *this;
 }

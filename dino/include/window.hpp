@@ -36,6 +36,10 @@ public:
     bool isOpen();
     void close();
 
+    sf::Vector2u size() const;
+    uint width() const;
+    uint height() const;
+
     template<typename... Drawable>
     void redraw(const Drawable &...);
 

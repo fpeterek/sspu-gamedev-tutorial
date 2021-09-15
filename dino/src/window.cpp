@@ -39,3 +39,15 @@ void Window::close() {
 bool Window::isOpen() {
     return win.isOpen();
 }
+
+sf::Vector2u Window::size() const {
+    return win.getSize();
+}
+
+uint Window::width() const {
+    return size().x;
+}
+
+uint Window::height() const {
+    return size().y;
+}
