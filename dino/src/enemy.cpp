@@ -11,7 +11,7 @@ Enemy::Factory::Factory(
     rand(time(nullptr)) { }
 
 Enemy Enemy::Factory::create() {
-    if (std::uniform_int_distribution(1, 3)(rand) == 3) {
+    if (std::uniform_int_distribution(1, 5)(rand) > 3) {
         return createBird();
     }
     return createCactus();

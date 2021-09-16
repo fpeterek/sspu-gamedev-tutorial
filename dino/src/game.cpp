@@ -17,11 +17,11 @@ Game::Game() :
         { tl.loadSheet("resources/cactus.png", { 16, 16 }), 1.0 },
         { tl.loadSheet("resources/bird.png", { 16, 8 }), 0.5 },
         4.f,
-        { 1080 - 256 - 64 - 32*3 , 1080 - 256 },
+        { 1080 - 256 - 64 - 32*8 , 1080 - 256 },
         window.width(),
     },
     rand(time(nullptr)),
-    spawnDist(0.3, 0.75) {
+    spawnDist(2, 4) {
     window.setBackground(sf::Color(105, 157, 240));
     ground.setLevel(1080-256);
 }
@@ -60,10 +60,11 @@ void Game::popEnemies() {
 }
 
 void Game::update(const float dt) {
-    ground.move(dt * -100);
+    ground.move(dt * defaultSpeed);
     untilSpawn -= dt;
     for (auto & enemy : enemies) {
         enemy.update(dt);
+        enemy.move({ dt * defaultSpeed, 0.f });
     }
 }
 

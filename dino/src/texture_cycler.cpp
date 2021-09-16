@@ -6,11 +6,11 @@
 
 #include <cmath>
 
-TextureCycler::TextureCycler(const std::vector<sf::Texture> & texColl, const float per) :
-    textures(texColl), period(per) { }
+TextureCycler::TextureCycler(const std::vector<sf::Texture> & textures, const float period) :
+    textures(textures), period(period), textureLifetime(period/textures.size()) { }
 
 const sf::Texture & TextureCycler::current() {
-    return textures.get()[size_t(period / t)];
+    return textures.get()[size_t(t / textureLifetime)];
 }
 
 void TextureCycler::update(float dt) {
@@ -18,14 +18,15 @@ void TextureCycler::update(float dt) {
 }
 
 TextureCycler::TextureCycler(TextureCycler && rv) noexcept :
-    textures(rv.textures), period(rv.period), t(rv.t) { }
+    textures(rv.textures), period(rv.period), textureLifetime(rv.textureLifetime), t(rv.t) { }
 
 TextureCycler::TextureCycler(const TextureCycler & other) :
-    textures(other.textures), period(other.period) { }
+    textures(other.textures), period(other.period), textureLifetime(other.textureLifetime) { }
 
 TextureCycler & TextureCycler::operator=(TextureCycler && rv) noexcept {
     textures = rv.textures;
     period = rv.period;
+    textureLifetime = rv.textureLifetime;
     t = rv.t;
     return *this;
 }

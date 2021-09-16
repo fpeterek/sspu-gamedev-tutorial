@@ -13,6 +13,7 @@
 class TextureCycler {
     std::reference_wrapper<const std::vector<sf::Texture>> textures;
     float period;
+    float textureLifetime;
     float t = 0;
 
 public:

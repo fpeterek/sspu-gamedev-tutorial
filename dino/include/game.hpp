@@ -14,6 +14,8 @@
 
 class Game {
 
+    static constexpr float defaultSpeed = -150;
+
     float speed = 1.0;
     TextureLoader tl;
     Window window;
