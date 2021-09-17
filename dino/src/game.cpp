@@ -20,8 +20,15 @@ Game::Game() :
         { 1080 - 256 - 64 - 32*8 , 1080 - 256 },
         window.width(),
     },
+    dino {
+        { tl.loadSheet("resources/dino.png", { 16, 16 }, "dinoRun"), 0.5 },
+        { tl.loadSheet("resources/dino.png", { 16, 16 }, "dinoJump", 1), 1.0 },
+        { 300, 540 },
+        4.f
+    },
     rand(time(nullptr)),
     spawnDist(2, 4) {
+
     window.setBackground(sf::Color(105, 157, 240));
     ground.setLevel(1080-256);
 }
@@ -37,7 +44,7 @@ void Game::play() {
         popEnemies();
         createEnemy();
 
-        window.redraw(enemies, ground);
+        window.redraw(ground, enemies, dino);
     }
 }
 
@@ -66,5 +73,6 @@ void Game::update(const float dt) {
         enemy.update(dt);
         enemy.move({ dt * defaultSpeed, 0.f });
     }
+    dino.update(dt);
 }
 

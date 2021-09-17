@@ -11,10 +11,13 @@ void TextureLoader::pop(const std::string & texture) {
     textures.erase(texture);
 }
 
-const sf::Texture & TextureLoader::load(const std::string & texture, const sf::IntRect area) {
+const sf::Texture & TextureLoader::load(const std::string & texture, const sf::IntRect area, std::string key) {
+    if (key.empty()) {
+        key = texture;
+    }
     const auto tex = std::make_shared<sf::Texture>();
     tex->loadFromFile(texture, area);
-    textures[texture] = tex;
+    textures[key] = tex;
     return *tex;
 }
 
@@ -39,7 +42,11 @@ void TextureLoader::popSheet(const std::string & sheet) {
 }
 
 const std::vector<sf::Texture> & TextureLoader::loadSheet(
-    const std::string & sheet, const sf::Vector2u texSize, const uint texCount) {
+    const std::string & sheet, const sf::Vector2u texSize, std::string key, const uint texCount) {
+
+    if (key.empty()) {
+        key = sheet;
+    }
 
     sf::Image img;
     img.loadFromFile(sheet);
@@ -54,7 +61,7 @@ const std::vector<sf::Texture> & TextureLoader::loadSheet(
         tex.loadFromImage(img, { int(i*texSize.x), 0, (int)texSize.x, (int)texSize.y });
     }
 
-    sheets[sheet] = vec;
+    sheets[key] = vec;
     return *vec;
 }
 

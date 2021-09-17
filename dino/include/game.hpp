@@ -11,6 +11,7 @@
 #include "ground.hpp"
 #include "texture_loader.hpp"
 #include "enemy.hpp"
+#include "dino.hpp"
 
 class Game {
 
@@ -22,6 +23,7 @@ class Game {
     Ground ground;
     Enemy::Factory enemyFactory;
     std::vector<Enemy> enemies;
+    Dino dino;
 
     std::default_random_engine rand;
     std::uniform_real_distribution<double> spawnDist;

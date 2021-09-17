@@ -23,8 +23,8 @@ class Window {
 
     void draw(const sf::Drawable & drawable);
 
-    template<typename collection>
-    void draw(const collection & drawables);
+    template<template<typename> typename collection, typename T>
+    void draw(const collection<T> & drawables);
 
 public:
 
@@ -45,9 +45,9 @@ public:
 
 };
 
-template<typename collection>
-void Window::draw(const collection & drawables) {
-    for (const sf::Drawable & d : drawables) {
+template<template<typename> typename collection, typename T>
+void Window::draw(const collection<T> & drawables) {
+    for (const T & d : drawables) {
         draw(d);
     }
 }
