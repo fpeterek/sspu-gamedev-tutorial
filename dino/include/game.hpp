@@ -15,7 +15,9 @@
 
 class Game {
 
-    static constexpr float defaultSpeed = -150;
+    static constexpr float defaultSpeed = -200;
+    static constexpr float g = 700;
+    static constexpr float jumpForce = -550;
 
     float speed = 1.0;
     TextureLoader tl;
@@ -29,6 +31,7 @@ class Game {
     std::uniform_real_distribution<double> spawnDist;
     float untilSpawn = 0.0;
 
+    void applyGravity(float dt);
     void update(float dt);
     void popEnemies();
     void createEnemy();

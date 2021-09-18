@@ -22,6 +22,8 @@ class Dino : public sf::Drawable {
     sf::Vector2f force;
     sf::Vector2f position;
 
+    bool canJump = false;
+
     void updateSprite();
 
 public:
@@ -33,6 +35,7 @@ public:
     void move(sf::Vector2f delta);
     void applyForce(sf::Vector2f force);
     void setPosition(sf::Vector2f position);
+    void setY(float y);
     void update(float dt);
     void jump(float force);
     void land();

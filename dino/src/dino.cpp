@@ -39,12 +39,16 @@ void Dino::update(float dt) {
 }
 
 void Dino::jump(const float fy) {
-    applyForce({ 0.f, fy });
-    current = jumpTexture;
+    if (canJump) {
+        applyForce({ 0.f, fy });
+        canJump = false;
+        current = jumpTexture;
+    }
 }
 
 void Dino::land() {
-    applyForce({ 0.f, 0.f });
+    applyForce({ 0.f, -force.y });
+    canJump = true;
     current = runTexture;
 }
 
@@ -58,5 +62,10 @@ sf::FloatRect Dino::getHitbox() const {
 
 void Dino::draw(sf::RenderTarget & target, sf::RenderStates states) const {
     target.draw(sprite, states);
+}
+
+void Dino::setY(const float y) {
+    position.y = y;
+    updateSprite();
 }
 

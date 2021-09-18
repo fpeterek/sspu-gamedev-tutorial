@@ -23,13 +23,28 @@ Window::Window(const uint width, const uint height) :
         sf::Style::Fullscreen,
     } { }
 
-void Window::handleEvents() {
-    sf::Event ev {};
-    while (win.pollEvent(ev)) {
-        if (ev.type == sf::Event::Closed or (ev.type == sf::Event::KeyPressed and ev.key.code == sf::Keyboard::Escape)) {
-            close();
+void Window::processKeyboard() {
+    for (auto & pair : keyPress) {
+        if (sf::Keyboard::isKeyPressed(pair.first)) {
+            pair.second();
         }
     }
+}
+
+void Window::pollEvents() {
+    sf::Event ev {};
+    while (win.pollEvent(ev)) {
+        const auto iter = events.find(ev.type);
+        if (iter == events.end()) {
+            continue;
+        }
+        iter->second(ev);
+    }
+}
+
+void Window::handleEvents() {
+    pollEvents();
+    processKeyboard();
 }
 
 void Window::close() {
@@ -51,3 +66,12 @@ uint Window::width() const {
 uint Window::height() const {
     return size().y;
 }
+
+void Window::setCallback(const sf::Keyboard::Key key, KeyCallback callback) {
+    keyPress[key] = std::move(callback);
+}
+
+void Window::setCallback(const sf::Event::EventType key, EventCallback callback) {
+    events[key] = std::move(callback);
+}
+

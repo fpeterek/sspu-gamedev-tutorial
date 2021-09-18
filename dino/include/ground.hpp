@@ -22,6 +22,7 @@ public:
 
     void setPosition(sf::Vector2f position);
     void setLevel(float y);
+    float level() const;
     void move(float dx);
     void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
     Ground(const sf::Texture & surface, const sf::Texture & dirt, sf::Vector2i dim, float scale);

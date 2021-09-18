@@ -4,6 +4,8 @@
 
 #include "game.hpp"
 
+#include <cmath>
+
 Game::Game() :
     tl {},
     window(1920, 1080),
@@ -31,6 +33,12 @@ Game::Game() :
 
     window.setBackground(sf::Color(105, 157, 240));
     ground.setLevel(1080-256);
+
+    window.setCallback(sf::Keyboard::Space, [this]() -> void { dino.jump(jumpForce); });
+    window.setCallback(sf::Keyboard::Escape, [this]() -> void { window.close(); });
+    window.setCallback(sf::Keyboard::Q, [this]() -> void { window.close(); });
+
+    window.setCallback(sf::Event::Closed, [this](const sf::Event&) -> void { window.close(); });
 }
 
 void Game::play() {
@@ -38,7 +46,7 @@ void Game::play() {
     while (window.isOpen()) {
         window.handleEvents();
 
-        const float dt = clock.restart().asSeconds() * speed;
+        const float dt = std::min(clock.restart().asSeconds() * speed, 0.1f);
 
         update(dt);
         popEnemies();
@@ -74,5 +82,19 @@ void Game::update(const float dt) {
         enemy.move({ dt * defaultSpeed, 0.f });
     }
     dino.update(dt);
+    applyGravity(dt);
+}
+
+void Game::applyGravity(const float dt) {
+    dino.applyForce({ 0.f, dt * g });
+    const auto current = dino.getForce();
+    const sf::Vector2f delta = { current.x * dt, current.y * dt };
+    dino.move(delta);
+    const auto top = dino.getHitbox().top;
+    const auto bottom = top + dino.getHitbox().height;
+    if (bottom >= ground.level()) {
+        dino.land();
+        dino.setY(top - (bottom-ground.level()));
+    }
 }
 

@@ -44,3 +44,7 @@ void Ground::setLevel(const float y) {
     pos.y = y;
 }
 
+float Ground::level() const {
+    return pos.y;
+}
+

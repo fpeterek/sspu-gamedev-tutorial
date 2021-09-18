@@ -5,13 +5,25 @@
 #ifndef DINO_WINDOW_HPP
 #define DINO_WINDOW_HPP
 
+#include <unordered_map>
+#include <functional>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
 class Window {
 
+public:
+    typedef std::function<void(void)> KeyCallback;
+    typedef std::function<void(const sf::Event&)> EventCallback;
+
+private:
+
     sf::RenderWindow win;
     sf::Color background;
+
+    std::unordered_map<sf::Keyboard::Key, KeyCallback> keyPress;
+    std::unordered_map<sf::Event::EventType, EventCallback> events;
 
     template<typename Drawable, typename... Rest>
     void intRedraw(const Drawable & drawable, const Rest &... rest);
@@ -26,11 +38,17 @@ class Window {
     template<template<typename> typename collection, typename T>
     void draw(const collection<T> & drawables);
 
+    void processKeyboard();
+    void pollEvents();
+
 public:
 
     Window(uint width, uint height);
 
     void setBackground(sf::Color color);
+
+    void setCallback(sf::Event::EventType, EventCallback callback);
+    void setCallback(sf::Keyboard::Key, KeyCallback callback);
 
     void handleEvents();
     bool isOpen();
