@@ -15,13 +15,16 @@ Game::Game() :
         { 1920, 256 },
         4.f
     },
-    enemyFactory {
-        { tl.loadSheet("resources/cactus.png", { 16, 16 }), 1.0 },
-        { tl.loadSheet("resources/bird.png", { 16, 8 }), 0.5 },
-        4.f,
-        { 1080 - 256 - 64 - 32*8 , 1080 - 256 },
-        window.width(),
-    },
+    enemyFactory(
+        Enemy::Factory::Builder()
+            .setCactusTexture({ tl.loadSheet("resources/cactus.png", { 16, 16 }), 1.0 })
+            .setBirdTexture({ tl.loadSheet("resources/bird.png", { 16, 16 }), 0.5 })
+            .setCactusChance(65)
+            .setSpawnRange({ 1080 - 256 - 64 - 32*8 , 1080 - 256 })
+            .setScale(4.f)
+            .setWindowWidth(window.width())
+            .create()
+    ),
     dino {
         { tl.loadSheet("resources/dino.png", { 16, 16 }, "dinoRun"), 0.5 },
         { tl.loadSheet("resources/dino.png", { 16, 16 }, "dinoJump", 1), 1.0 },
@@ -37,6 +40,7 @@ Game::Game() :
     window.setCallback(sf::Keyboard::Space, [this]() -> void { dino.jump(jumpForce); });
     window.setCallback(sf::Keyboard::Escape, [this]() -> void { window.close(); });
     window.setCallback(sf::Keyboard::Q, [this]() -> void { window.close(); });
+    window.setCallback(sf::Keyboard::R, [this]() -> void { reset(); });
 
     window.setCallback(sf::Event::Closed, [this](const sf::Event&) -> void { window.close(); });
 }
@@ -46,9 +50,10 @@ void Game::play() {
     while (window.isOpen()) {
         window.handleEvents();
 
-        const float dt = std::min(clock.restart().asSeconds() * speed, 0.1f);
+        const float dt = std::min(clock.restart().asSeconds() * speed, 0.1f) * alive;
 
         update(dt);
+        checkCollisions();
         popEnemies();
         createEnemy();
 
@@ -76,6 +81,7 @@ void Game::popEnemies() {
 
 void Game::update(const float dt) {
     ground.move(dt * defaultSpeed);
+    distance += defaultSpeed * dt;
     untilSpawn -= dt;
     for (auto & enemy : enemies) {
         enemy.update(dt);
@@ -90,11 +96,30 @@ void Game::applyGravity(const float dt) {
     const auto current = dino.getForce();
     const sf::Vector2f delta = { current.x * dt, current.y * dt };
     dino.move(delta);
-    const auto top = dino.getHitbox().top;
-    const auto bottom = top + dino.getHitbox().height;
+    const auto top = dino.hitbox().top;
+    const auto bottom = top + dino.hitbox().height;
     if (bottom >= ground.level()) {
         dino.land();
         dino.setY(top - (bottom-ground.level()));
     }
+}
+
+void Game::checkCollisions() {
+    const auto dinoHitbox = dino.hitbox();
+    for (const auto & enemy : enemies) {
+        if (enemy.hitbox().intersects(dinoHitbox)) {
+            alive = false;
+            break;
+        }
+    }
+}
+
+void Game::reset() {
+    enemies.clear();
+    speed = 1.0;
+    dino.setPosition({ 300.f, 540.f });
+    dino.applyForce({ -dino.getForce().x, -dino.getForce().y });
+    alive = true;
+    distance = 0;
 }
 

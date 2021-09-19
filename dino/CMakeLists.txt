@@ -21,6 +21,7 @@ add_executable(
     src/window.cpp
     src/texture_cycler.cpp
     src/ground.cpp
+    src/text.cpp
 
     include/util.hpp
     include/texture_loader.hpp
@@ -30,5 +31,6 @@ add_executable(
     include/window.hpp
     include/ground.hpp
     include/texture_cycler.hpp
+    include/text.hpp
 )
 

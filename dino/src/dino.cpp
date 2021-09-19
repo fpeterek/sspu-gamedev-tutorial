@@ -56,7 +56,7 @@ sf::Vector2f Dino::getForce() const {
     return force;
 }
 
-sf::FloatRect Dino::getHitbox() const {
+sf::FloatRect Dino::hitbox() const {
     return sprite.getGlobalBounds();
 }
 

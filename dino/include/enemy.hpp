@@ -6,6 +6,7 @@
 #define DINO_ENEMY_HPP
 
 #include <random>
+#include <optional>
 
 #include <SFML/Graphics.hpp>
 
@@ -38,14 +39,44 @@ public:
         const float scale;
         const std::pair<uint, uint> yRange;
         const uint windowWidth;
+        const uint cactusChance;
         std::default_random_engine rand;
+
+        Factory(
+            TextureCycler cactus,
+            TextureCycler bird,
+            float scale,
+            decltype(yRange) yRange,
+            uint winWidth,
+            uint cactusChance
+        );
+
+    public:
+
+
+        class Builder {
+            std::optional<TextureCycler> cactus;
+            std::optional<TextureCycler> bird;
+            float scale = 1.0;
+            std::optional<decltype(yRange)> spawnRange;
+            uint winWidth = sf::VideoMode::getDesktopMode().width;
+            uint cactusChance = 50;
+
+        public:
+
+            Builder & setCactusTexture(TextureCycler cactus);
+            Builder & setBirdTexture(TextureCycler bird);
+            Builder & setScale(float scale);
+            Builder & setSpawnRange(decltype(Factory::yRange) spawnRange);
+            Builder & setWindowWidth(uint width);
+            Builder & setCactusChance(uint chance);
+            Builder & setBirdChance(uint chance);
+
+            Factory create();
+        };
 
         Enemy createBird();
         Enemy createCactus();
-
-    public:
-        Factory(TextureCycler cactus, TextureCycler bird, float scale, decltype(yRange) yRange, uint winWidth);
-
         Enemy create();
     };
 

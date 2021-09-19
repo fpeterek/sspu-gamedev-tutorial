@@ -41,7 +41,7 @@ public:
     void land();
 
     sf::Vector2f getForce() const;
-    sf::FloatRect getHitbox() const;
+    sf::FloatRect hitbox() const;
 
 };
 

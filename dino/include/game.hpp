@@ -19,7 +19,9 @@ class Game {
     static constexpr float g = 700;
     static constexpr float jumpForce = -550;
 
+    bool alive = true;
     float speed = 1.0;
+    float distance = 0;
     TextureLoader tl;
     Window window;
     Ground ground;
@@ -33,11 +35,11 @@ class Game {
 
     void applyGravity(float dt);
     void update(float dt);
+    void checkCollisions();
     void popEnemies();
     void createEnemy();
 
     void reset();
-    void start();
 
 public:
     Game();

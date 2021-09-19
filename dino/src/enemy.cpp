@@ -2,16 +2,20 @@
 // Created by fpeterek on 11.09.21.
 //
 
-#include <enemy.hpp>
+#include "enemy.hpp"
+
+#include <cmath>
 #include <utility>
 
+
 Enemy::Factory::Factory(
-    TextureCycler cactus, TextureCycler bird, const float scale, const decltype(yRange) yRange, const uint winWidth) :
+    TextureCycler cactus, TextureCycler bird, const float scale, const decltype(yRange) yRange, const uint winWidth,
+    const uint cactusChance) :
     cactus(std::move(cactus)), bird(std::move(bird)), scale(scale), yRange(yRange), windowWidth(winWidth),
-    rand(time(nullptr)) { }
+    rand(time(nullptr)), cactusChance(cactusChance) { }
 
 Enemy Enemy::Factory::create() {
-    if (std::uniform_int_distribution(1, 5)(rand) > 3) {
+    if (std::uniform_int_distribution(1, 100)(rand) > cactusChance) {
         return createBird();
     }
     return createCactus();
@@ -45,8 +49,8 @@ Enemy Enemy::Factory::createCactus() {
 
 sf::FloatRect Enemy::hitbox() const {
     return {
-        sprite.getPosition().x + (sprite.getLocalBounds().width - hitboxSize.x) / 2,
-        sprite.getPosition().y + (sprite.getLocalBounds().height - hitboxSize.y) / 2,
+        sprite.getPosition().x + (sprite.getGlobalBounds().width - hitboxSize.x) / 2,
+        sprite.getPosition().y + (sprite.getGlobalBounds().height - hitboxSize.y) / 2,
         hitboxSize.x,
         hitboxSize.y
     };
@@ -82,4 +86,61 @@ Enemy & Enemy::operator=(Enemy && other) noexcept {
     textureCycler = std::move(other.textureCycler);
     hitboxSize = other.hitboxSize;
     return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setCactusTexture(TextureCycler cactusTex) {
+    cactus.emplace(std::move(cactusTex));
+    return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setBirdTexture(TextureCycler birdTex) {
+    bird.emplace(std::move(birdTex));
+    return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setScale(const float sc) {
+    scale = sc;
+    return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setSpawnRange(const decltype(Factory::yRange) range) {
+    spawnRange.emplace(range);
+    return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setWindowWidth(const uint width) {
+    winWidth = width;
+    return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setCactusChance(uint chance) {
+    chance = std::min(chance, 100u);
+    cactusChance = chance;
+    return *this;
+}
+
+Enemy::Factory::Builder & Enemy::Factory::Builder::setBirdChance(uint chance) {
+    return setCactusChance(100 - std::min(chance, 100u));
+}
+
+Enemy::Factory Enemy::Factory::Builder::create() {
+
+    if (not cactus.has_value()) {
+        throw std::runtime_error("Cactus texture was not provided.");
+    }
+    if (not bird.has_value()) {
+        throw std::runtime_error("Bird texture was not provided.");
+    }
+    if (not spawnRange.has_value()) {
+        throw std::runtime_error("Spawn range was not provided.");
+    }
+
+    return {
+        std::move(cactus.value()),
+        std::move(bird.value()),
+        scale,
+        spawnRange.value(),
+        winWidth,
+        cactusChance,
+    };
 }
