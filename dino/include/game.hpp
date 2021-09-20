@@ -12,12 +12,14 @@
 #include "texture_loader.hpp"
 #include "enemy.hpp"
 #include "dino.hpp"
+#include "text.hpp"
 
 class Game {
 
     static constexpr float defaultSpeed = -200;
     static constexpr float g = 700;
     static constexpr float jumpForce = -550;
+    static constexpr float distanceMod = 15;
 
     bool alive = true;
     float speed = 1.0;
@@ -33,8 +35,13 @@ class Game {
     std::uniform_real_distribution<double> spawnDist;
     float untilSpawn = 0.0;
 
+    Text distanceText;
+    Text gameOverText;
+
+    void die();
     void applyGravity(float dt);
     void update(float dt);
+    void updateDistText();
     void checkCollisions();
     void popEnemies();
     void createEnemy();

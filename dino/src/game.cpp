@@ -32,7 +32,26 @@ Game::Game() :
         4.f
     },
     rand(time(nullptr)),
-    spawnDist(2, 4) {
+    spawnDist(2, 4),
+    distanceText {
+        FontLoader::instance().loadFont("resources/LCD_Solid.ttf"),
+        { window.width()-5.f, 5.f }
+    },
+    gameOverText {
+        FontLoader::instance()["resources/LCD_Solid.ttf"] ,
+        { window.width() / 2.f, window.height() / 2.f },
+        "Game Over"
+    } {
+
+    distanceText.setCharacterSize(10 * 4.f);
+    distanceText.setOutlineColor(sf::Color::Black);
+    distanceText.setOutlineThickness(2);
+    distanceText.align(Text::Align::TopRight);
+
+    gameOverText.setOutlineColor(sf::Color::Black);
+    gameOverText.setFillColor(sf::Color::Red);
+    gameOverText.setCharacterSize(16 * 4.f);
+    gameOverText.align(Text::Align::Center);
 
     window.setBackground(sf::Color(105, 157, 240));
     ground.setLevel(1080-256);
@@ -57,7 +76,7 @@ void Game::play() {
         popEnemies();
         createEnemy();
 
-        window.redraw(ground, enemies, dino);
+        window.redraw(ground, enemies, dino, distanceText);
     }
 }
 
@@ -79,9 +98,14 @@ void Game::popEnemies() {
     }
 }
 
+void Game::updateDistText() {
+    distanceText.setString(std::to_string((size_t)distance));
+}
+
 void Game::update(const float dt) {
     ground.move(dt * defaultSpeed);
-    distance += defaultSpeed * dt;
+    distance += std::abs(defaultSpeed * dt) / distanceMod;
+    updateDistText();
     untilSpawn -= dt;
     for (auto & enemy : enemies) {
         enemy.update(dt);
@@ -104,12 +128,15 @@ void Game::applyGravity(const float dt) {
     }
 }
 
+void Game::die() {
+    alive = false;
+}
+
 void Game::checkCollisions() {
     const auto dinoHitbox = dino.hitbox();
     for (const auto & enemy : enemies) {
         if (enemy.hitbox().intersects(dinoHitbox)) {
-            alive = false;
-            break;
+            return die();
         }
     }
 }
