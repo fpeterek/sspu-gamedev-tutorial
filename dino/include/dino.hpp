@@ -29,6 +29,7 @@ class Dino : public sf::Drawable {
 public:
 
     Dino(TextureCycler run, TextureCycler jump, sf::Vector2f position, float scale);
+    ~Dino() override = default;
 
     void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 

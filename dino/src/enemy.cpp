@@ -12,7 +12,7 @@ Enemy::Factory::Factory(
     TextureCycler cactus, TextureCycler bird, const float scale, const decltype(yRange) yRange, const uint winWidth,
     const uint cactusChance) :
     cactus(std::move(cactus)), bird(std::move(bird)), scale(scale), yRange(yRange), windowWidth(winWidth),
-    rand(time(nullptr)), cactusChance(cactusChance) { }
+    cactusChance(cactusChance), rand(time(nullptr)) { }
 
 Enemy Enemy::Factory::create() {
     if (std::uniform_int_distribution(1, 100)(rand) > cactusChance) {

@@ -29,8 +29,7 @@ public:
     void pop(const std::string & font);
 };
 
-// TODO: sf::Text is not meant to be inherited from
-class Text : public sf::Text {
+class Text : public sf::Drawable {
 
 public:
 
@@ -42,19 +41,33 @@ public:
 
 private:
 
+    sf::Text text;
     Align alignment = Align::TopLeft;
+    float scale = 1.0;
+    uint size = 12;
+    float outlineThickness = 0;
+    bool hidden = false;
     void adjustPosition();
+    void adjustSize();
+
+protected:
+    void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 public:
 
+    void show();
+    void hide();
     void setString(const sf::String & str);
     void setPosition(sf::Vector2f position);
+    void setFillColor(sf::Color color);
+    void setOutlineColor(sf::Color color);
+    void setOutlineThickness(float thickness);
     void setCharacterSize(uint size);
+    void setScale(float scale);
     void align(Align alignment);
 
-public:
-
     Text(const sf::Font & font, sf::Vector2f position, const std::string & content = "", uint size = 12);
+    ~Text() override = default;
 };
 
 #endif //DINO_TEXT_HPP

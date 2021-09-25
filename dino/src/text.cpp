@@ -38,7 +38,7 @@ FontLoader & FontLoader::instance() {
 }
 
 Text::Text(const sf::Font & font, const sf::Vector2f pos, const std::string & content, const uint size) {
-    setFont(font);
+    text.setFont(font);
     setCharacterSize(size);
     setPosition(pos);
     setString(sf::String(content));
@@ -46,8 +46,8 @@ Text::Text(const sf::Font & font, const sf::Vector2f pos, const std::string & co
 }
 
 void Text::adjustPosition() {
-    const float width = getGlobalBounds().width;
-    const float height = getGlobalBounds().height;
+    const float width = text.getGlobalBounds().width;
+    const float height = text.getGlobalBounds().height;
 
     float origX = 0;
 
@@ -65,7 +65,12 @@ void Text::adjustPosition() {
         origY = height;
     }
 
-    setOrigin(origX, origY);
+    text.setOrigin(origX, origY);
+}
+
+void Text::adjustSize() {
+    text.setCharacterSize(size * scale);
+    text.setOutlineThickness(outlineThickness * scale);
 }
 
 void Text::align(const Text::Align al) {
@@ -74,16 +79,52 @@ void Text::align(const Text::Align al) {
 }
 
 void Text::setPosition(const sf::Vector2f position) {
-    sf::Text::setPosition(position);
+    text.setPosition(position);
     adjustPosition();
 }
 
 void Text::setString(const sf::String & str) {
-    sf::Text::setString(str);
+    text.setString(str);
     adjustPosition();
 }
 
-void Text::setCharacterSize(const uint size) {
-    sf::Text::setCharacterSize(size);
+void Text::setCharacterSize(const uint charSize) {
+    size = charSize;
+    adjustSize();
     adjustPosition();
 }
+
+void Text::setScale(float newScale) {
+    scale = newScale;
+    adjustSize();
+    adjustPosition();
+}
+
+void Text::setFillColor(const sf::Color color) {
+    text.setFillColor(color);
+}
+
+void Text::setOutlineColor(const sf::Color color) {
+    text.setOutlineColor(color);
+}
+
+void Text::setOutlineThickness(const float thickness) {
+    outlineThickness = thickness;
+    adjustSize();
+}
+
+void Text::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+    if (not hidden) {
+        target.draw(text, states);
+    }
+}
+
+void Text::show() {
+    hidden = false;
+}
+
+void Text::hide() {
+    hidden = true;
+}
+
+

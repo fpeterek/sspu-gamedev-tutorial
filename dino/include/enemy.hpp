@@ -21,6 +21,8 @@ class Enemy : public sf::Drawable {
 
 public:
 
+    ~Enemy() override = default;
+
     Enemy(Enemy && rvalue) noexcept;
     Enemy & operator=(Enemy && rvalue) noexcept;
 

@@ -43,15 +43,19 @@ Game::Game() :
         "Game Over"
     } {
 
-    distanceText.setCharacterSize(10 * 4.f);
+    distanceText.setScale(4.f);
+    distanceText.setCharacterSize(10);
     distanceText.setOutlineColor(sf::Color::Black);
-    distanceText.setOutlineThickness(2);
+    distanceText.setOutlineThickness(0.75);
     distanceText.align(Text::Align::TopRight);
 
+    gameOverText.setScale(4.f);
     gameOverText.setOutlineColor(sf::Color::Black);
+    gameOverText.setOutlineThickness(1);
     gameOverText.setFillColor(sf::Color::Red);
-    gameOverText.setCharacterSize(16 * 4.f);
+    gameOverText.setCharacterSize(18);
     gameOverText.align(Text::Align::Center);
+    gameOverText.hide();
 
     window.setBackground(sf::Color(105, 157, 240));
     ground.setLevel(1080-256);
@@ -76,7 +80,7 @@ void Game::play() {
         popEnemies();
         createEnemy();
 
-        window.redraw(ground, enemies, dino, distanceText);
+        window.redraw(ground, enemies, dino, distanceText, gameOverText);
     }
 }
 
@@ -130,6 +134,7 @@ void Game::applyGravity(const float dt) {
 
 void Game::die() {
     alive = false;
+    gameOverText.show();
 }
 
 void Game::checkCollisions() {
@@ -143,6 +148,7 @@ void Game::checkCollisions() {
 
 void Game::reset() {
     enemies.clear();
+    gameOverText.hide();
     speed = 1.0;
     dino.setPosition({ 300.f, 540.f });
     dino.applyForce({ -dino.getForce().x, -dino.getForce().y });

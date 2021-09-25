@@ -25,7 +25,9 @@ public:
     float level() const;
     void move(float dx);
     void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+
     Ground(const sf::Texture & surface, const sf::Texture & dirt, sf::Vector2i dim, float scale);
+    ~Ground() override = default;
 
 };
 
