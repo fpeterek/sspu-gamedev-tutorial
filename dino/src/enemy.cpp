@@ -12,10 +12,11 @@ Enemy::Factory::Factory(
     TextureCycler cactus, TextureCycler bird, const float scale, const decltype(yRange) yRange, const uint winWidth,
     const uint cactusChance) :
     cactus(std::move(cactus)), bird(std::move(bird)), scale(scale), yRange(yRange), windowWidth(winWidth),
-    cactusChance(cactusChance), rand(time(nullptr)) { }
+    cactusChance(cactusChance), rand(time(nullptr)),
+    spawnChance(1, 100) { }
 
 Enemy Enemy::Factory::create() {
-    if (std::uniform_int_distribution(1, 100)(rand) > cactusChance) {
+    if (spawnChance(rand) > cactusChance) {
         return createBird();
     }
     return createCactus();

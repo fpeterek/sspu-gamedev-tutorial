@@ -2,13 +2,15 @@
 // Created by fpeterek on 09.09.21.
 //
 
-#ifndef DINO_TEXTURE_LOADER_HPP
-#define DINO_TEXTURE_LOADER_HPP
+#ifndef DINO_TEXTURES_HPP
+#define DINO_TEXTURES_HPP
 
 #include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <vector>
+#include <functional>
 
 #include <SFML/Graphics.hpp>
 
@@ -41,4 +43,19 @@ public:
     const std::vector<sf::Texture> & operator[](const S & sheet) const;
 };
 
-#endif //DINO_TEXTURE_LOADER_HPP
+class TextureCycler {
+    std::reference_wrapper<const std::vector<sf::Texture>> textures;
+    float period;
+    float textureLifetime;
+    float t = 0;
+
+public:
+    TextureCycler(const std::vector<sf::Texture> & textures, float period);
+    TextureCycler(TextureCycler && rv) noexcept;
+    TextureCycler & operator=(TextureCycler && rv) noexcept;
+    TextureCycler(const TextureCycler & other);
+    void update(float dt);
+    const sf::Texture & current();
+};
+
+#endif //DINO_TEXTURES_HPP

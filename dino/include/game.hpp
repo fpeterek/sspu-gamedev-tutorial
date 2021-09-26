@@ -9,10 +9,11 @@
 
 #include "window.hpp"
 #include "ground.hpp"
-#include "texture_loader.hpp"
+#include "textures.hpp"
 #include "enemy.hpp"
 #include "dino.hpp"
 #include "text.hpp"
+#include "sky.hpp"
 
 class Game {
 
@@ -27,6 +28,7 @@ class Game {
     TextureLoader tl;
     Window window;
     Ground ground;
+    Sky sky;
     Enemy::Factory enemyFactory;
     std::vector<Enemy> enemies;
     Dino dino;

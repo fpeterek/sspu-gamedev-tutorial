@@ -10,7 +10,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "texture_cycler.hpp"
+#include "textures.hpp"
 
 class Enemy : public sf::Drawable {
 
@@ -43,6 +43,7 @@ public:
         const uint windowWidth;
         const uint cactusChance;
         std::default_random_engine rand;
+        std::uniform_int_distribution<uint> spawnChance;
 
         Factory(
             TextureCycler cactus,

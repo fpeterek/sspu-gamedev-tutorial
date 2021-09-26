@@ -15,6 +15,11 @@ Game::Game() :
         { 1920, 256 },
         4.f
     },
+    sky {
+        { 1920, 1080-256 },
+        4.f,
+        tl.load("resources/cloud.png"),
+    },
     enemyFactory(
         Enemy::Factory::Builder()
             .setCactusTexture({ tl.loadSheet("resources/cactus.png", { 16, 16 }), 1.0 })
@@ -80,7 +85,7 @@ void Game::play() {
         popEnemies();
         createEnemy();
 
-        window.redraw(ground, enemies, dino, distanceText, gameOverText);
+        window.redraw(sky, ground, enemies, dino, distanceText, gameOverText);
     }
 }
 
@@ -107,6 +112,7 @@ void Game::updateDistText() {
 }
 
 void Game::update(const float dt) {
+    sky.update(dt);
     ground.move(dt * defaultSpeed);
     distance += std::abs(defaultSpeed * dt) / distanceMod;
     updateDistText();

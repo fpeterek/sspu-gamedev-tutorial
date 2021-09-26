@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "texture_cycler.hpp"
+#include "textures.hpp"
 
 
 class Dino : public sf::Drawable {

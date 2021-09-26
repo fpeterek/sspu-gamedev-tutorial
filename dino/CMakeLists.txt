@@ -14,23 +14,21 @@ add_executable(
     a.out
 
     src/main.cpp
-    src/texture_loader.cpp
+    src/textures.cpp
     src/game.cpp
     src/dino.cpp
     src/enemy.cpp
     src/window.cpp
-    src/texture_cycler.cpp
     src/ground.cpp
     src/text.cpp
 
     include/util.hpp
-    include/texture_loader.hpp
+    include/textures.hpp
     include/game.hpp
     include/dino.hpp
     include/enemy.hpp
     include/window.hpp
     include/ground.hpp
-    include/texture_cycler.hpp
     include/text.hpp
-)
+    include/sky.hpp src/sky.cpp)
 
