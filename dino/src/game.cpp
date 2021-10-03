@@ -10,20 +10,20 @@ Game::Game() :
     tl {},
     window(1920, 1080),
     ground {
-        tl.load("resources/sand.png"),
-        tl.load("resources/dirt.png"),
+        tl.load("resources/sprites/sand.png"),
+        tl.load("resources/sprites/dirt.png"),
         { 1920, 256 },
         4.f
     },
     sky {
         { 1920, 1080-256 },
         4.f,
-        tl.load("resources/cloud.png"),
+        tl.load("resources/sprites/cloud.png"),
     },
     enemyFactory(
         Enemy::Factory::Builder()
-            .setCactusTexture({ tl.loadSheet("resources/cactus.png", { 16, 16 }), 1.0 })
-            .setBirdTexture({ tl.loadSheet("resources/bird.png", { 16, 16 }), 0.5 })
+            .setCactusTexture({ tl.loadSheet("resources/sprites/cactus.png", { 16, 16 }), 1.0 })
+            .setBirdTexture({ tl.loadSheet("resources/sprites/bird.png", { 16, 16 }), 0.5 })
             .setCactusChance(65)
             .setSpawnRange({ 1080 - 256 - 64 - 32*8 , 1080 - 256 })
             .setScale(4.f)
@@ -31,19 +31,19 @@ Game::Game() :
             .create()
     ),
     dino {
-        { tl.loadSheet("resources/dino.png", { 16, 16 }, "dinoRun"), 0.5 },
-        { tl.loadSheet("resources/dino.png", { 16, 16 }, "dinoJump", 1), 1.0 },
+        { tl.loadSheet("resources/sprites/dino.png", { 16, 16 }, "dinoRun"), 0.5 },
+        { tl.loadSheet("resources/sprites/dino.png", { 16, 16 }, "dinoJump", 1), 1.0 },
         { 300, 540 },
         4.f
     },
     rand(time(nullptr)),
     spawnDist(2, 4),
     distanceText {
-        FontLoader::instance().loadFont("resources/LCD_Solid.ttf"),
+        FontLoader::instance().loadFont("resources/fonts/LCD_Solid.ttf"),
         { window.width()-5.f, 5.f }
     },
     gameOverText {
-        FontLoader::instance()["resources/LCD_Solid.ttf"] ,
+        FontLoader::instance()["resources/fonts/LCD_Solid.ttf"] ,
         { window.width() / 2.f, window.height() / 2.f },
         "Game Over"
     } {
