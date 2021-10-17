@@ -34,19 +34,40 @@ float Sky::Cloud::velocity() const {
 }
 
 void Sky::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+    if (shader.has_value()) {
+        auto & sh = shader->get();
+        states.shader = &sh;
+
+        sh.setUniform("sunPosition", sf::Vector2f { 1200.f, 300.f });
+        sh.setUniform("groundLevel", 1200.f);
+    }
+    sf::Texture txt;
+    sf::Image img;
+    img.create(dim.x, dim.y, { 64, 198, 255 });
+    txt.loadFromImage(img);
+    sf::Sprite sprite(txt);
+    // sf::RectangleShape rect { sf::Vector2f(dim.x, dim.y) };
+    // rect.setFillColor(sf::Color { 64, 198, 255 });
+    if (shader.has_value()) {
+        shader->get().setUniform("texture", sf::Shader::CurrentTexture);
+    }
+    target.draw(sprite, states);
     for (const Cloud & cloud : clouds) {
         target.draw(cloud, states);
+        if (shader.has_value()) {
+            shader->get().setUniform("texture", sf::Shader::CurrentTexture);
+        }
     }
 }
 
-Sky::Sky(const sf::Vector2i dimensions, float scale, const sf::Texture & cloud) :
+Sky::Sky(const sf::Vector2i dimensions, float scale, const sf::Texture & cloud, decltype(shader) shader) :
     dim(dimensions), scale(scale), cloudTexture(cloud), maxClouds(dimensions.y / scale / 15),
-    rand(time(nullptr)), spawnRange(0, dimensions.y * 0.8f),
+    shader(shader), rand(time(nullptr)), spawnRange(0, dimensions.y * 0.8f),
     cloudScale(scale * 0.8f, scale * 1.2f) {
 
     const int fraction = dimensions.x / maxClouds;
-    for (int i = 0; i < maxClouds; ++i) {
-        spawnCloud({ i * fraction, (i+1) * fraction });
+    for (size_t i = 0; i < maxClouds; ++i) {
+        spawnCloud({ (int)i * fraction, (int)(i+1) * fraction });
     }
 }
 
@@ -92,6 +113,10 @@ void Sky::spawnCloud() {
     const sf::Vector2f position(dim.x, spawnRange(rand));
     const float v = baseCloudSpeed * s;
     clouds.emplace_back(cloudTexture, position, s, v);
+}
+
+void Sky::applyShader(sf::Shader & sh) {
+    shader.emplace(sh);
 }
 
 

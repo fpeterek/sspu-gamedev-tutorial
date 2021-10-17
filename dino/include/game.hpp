@@ -26,6 +26,7 @@ class Game {
     float speed = 1.0;
     float distance = 0;
     TextureLoader tl;
+    sf::Shader shader;
     Window window;
     Ground ground;
     Sky sky;

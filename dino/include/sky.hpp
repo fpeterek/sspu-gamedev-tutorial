@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <random>
+#include <optional>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -33,7 +34,9 @@ class Sky : public sf::Drawable {
     const sf::Vector2i dim;
     const float scale;
     const sf::Texture & cloudTexture;
-    const int maxClouds;
+    const size_t maxClouds;
+
+    std::optional<std::reference_wrapper<sf::Shader>> shader;
 
     std::vector<Cloud> clouds;
     std::default_random_engine rand;
@@ -51,11 +54,11 @@ protected:
 
 public:
 
-    Sky(sf::Vector2i dimensions, float scale, const sf::Texture & cloud);
+    Sky(sf::Vector2i dimensions, float scale, const sf::Texture & cloud, decltype(shader) shader);
     ~Sky() override = default;
 
     void update(float dt);
-
+    void applyShader(sf::Shader & shader);
 
 };
 
