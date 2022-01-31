@@ -22,13 +22,19 @@ void main() {
         float dy = sunPosition.y - gl_FragCoord.y;
         float dist = sqrt(dx*dx + dy*dy);
 
-        float sunCoeff = max(min(2.5, sunRadius / dist), 0.1);
+        float sunCoeff = max(min(1.0, sunRadius / dist), 0.1);
         float texCoeff = 1.0 - sunCoeff;
 
         vec3 sun = vec3(1.0, 0.5, 0.1) * sunCoeff;
         vec3 tex = vec3(color) * texCoeff;
 
+        if (dist < sunRadius) {
+            color = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+
         color = vec4(sun + tex, color.w);
+        // color = vec4(1920 / dist, 1920/dist, 1920/dist, 1.0);
+
     }
 
     gl_FragColor = color;

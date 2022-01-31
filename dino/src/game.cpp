@@ -19,6 +19,7 @@ Game::Game() :
         { 1920, 1080-256 },
         4.f,
         tl.load("resources/sprites/cloud.png"),
+        std::nullopt,
         std::nullopt
     },
     enemyFactory(
@@ -50,8 +51,10 @@ Game::Game() :
     } {
 
     shader.loadFromFile("resources/shaders/shader.vert", "resources/shaders/shader.frag");
-    //shader.loadFromFile("resources/shaders/shader.frag", sf::Shader::Fragment);
     sky.applyShader(shader);
+
+    skyShader.loadFromFile("resources/shaders/shader.vert", "resources/shaders/sky.frag");
+    sky.applySkyShader(skyShader);
 
     distanceText.setScale(4.f);
     distanceText.setCharacterSize(10);
