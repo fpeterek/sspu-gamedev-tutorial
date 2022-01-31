@@ -34,36 +34,45 @@ float Sky::Cloud::velocity() const {
 }
 
 void Sky::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-    if (shader.has_value()) {
-        auto & sh = shader->get();
+    if (skyShader.has_value()) {
+        auto & sh = skyShader->get();
         states.shader = &sh;
 
-        sh.setUniform("sunPosition", sf::Vector2f { 1200.f, 300.f });
+        sh.setUniform("sunPosition", sf::Vector2f { 300.f, 700.f });
         sh.setUniform("groundLevel", 1200.f);
     }
-    sf::Texture txt;
-    sf::Image img;
-    img.create(dim.x, dim.y, { 64, 198, 255 });
-    txt.loadFromImage(img);
-    sf::Sprite sprite(txt);
+
+    if (shader.has_value()) {
+        auto & sh = shader->get();
+        sh.setUniform("sunPosition", sf::Vector2f { 300.f, 700.f });
+        sh.setUniform("groundLevel", 1200.f);
+    }
     // sf::RectangleShape rect { sf::Vector2f(dim.x, dim.y) };
     // rect.setFillColor(sf::Color { 64, 198, 255 });
-    if (shader.has_value()) {
-        shader->get().setUniform("texture", sf::Shader::CurrentTexture);
+    if (skyShader.has_value()) {
+        skyShader->get().setUniform("texture", sf::Shader::CurrentTexture);
     }
-    target.draw(sprite, states);
+    target.draw(skySprite, states);
+
     for (const Cloud & cloud : clouds) {
-        target.draw(cloud, states);
         if (shader.has_value()) {
+            states.shader = &shader->get();
             shader->get().setUniform("texture", sf::Shader::CurrentTexture);
         }
+        target.draw(cloud, states);
     }
 }
 
-Sky::Sky(const sf::Vector2i dimensions, float scale, const sf::Texture & cloud, decltype(shader) shader) :
+Sky::Sky(const sf::Vector2i dimensions, float scale, const sf::Texture & cloud, decltype(skyShader) skyShader,
+         decltype(shader) shader) :
     dim(dimensions), scale(scale), cloudTexture(cloud), maxClouds(dimensions.y / scale / 15),
-    shader(shader), rand(time(nullptr)), spawnRange(0, dimensions.y * 0.8f),
+    skyShader(skyShader), shader(shader), rand(time(nullptr)), spawnRange(0, dimensions.y * 0.8f),
     cloudScale(scale * 0.8f, scale * 1.2f) {
+
+    sf::Image img;
+    img.create(dim.x, dim.y, { 64, 198, 255 });
+    skyTexture.loadFromImage(img);
+    skySprite.setTexture(skyTexture);
 
     const int fraction = dimensions.x / maxClouds;
     for (size_t i = 0; i < maxClouds; ++i) {
@@ -117,6 +126,10 @@ void Sky::spawnCloud() {
 
 void Sky::applyShader(sf::Shader & sh) {
     shader.emplace(sh);
+}
+
+void Sky::applySkyShader(sf::Shader & newShader) {
+    skyShader.emplace(newShader);
 }
 
 

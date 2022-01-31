@@ -36,6 +36,11 @@ class Sky : public sf::Drawable {
     const sf::Texture & cloudTexture;
     const size_t maxClouds;
 
+    sf::Texture skyTexture;
+    sf::Image skyImage;
+    sf::Sprite skySprite;
+
+    std::optional<std::reference_wrapper<sf::Shader>> skyShader;
     std::optional<std::reference_wrapper<sf::Shader>> shader;
 
     std::vector<Cloud> clouds;
@@ -54,10 +59,12 @@ protected:
 
 public:
 
-    Sky(sf::Vector2i dimensions, float scale, const sf::Texture & cloud, decltype(shader) shader);
+    Sky(sf::Vector2i dimensions, float scale, const sf::Texture & cloud, decltype(skyShader) skyShader,
+        decltype(shader) shader);
     ~Sky() override = default;
 
     void update(float dt);
+    void applySkyShader(sf::Shader & shader);
     void applyShader(sf::Shader & shader);
 
 };
