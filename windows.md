@@ -1,9 +1,7 @@
 # How to run SFML projects on Windows
 
-Disclaimer: I do not use Windows, I refuse to use Windows, I have no idea 
-how to use Windows. This likely isn't the only, nor the most optimal way
-to do this. I, however, do not care. If you believe you can do it better,
-I will be happy if you submit a merge request.
+Disclaimer: I do not use Windows. This likely isn't the only, nor the most optimal way
+to do this. I will happily accept merge requests with better installation instructions.
 
 ## Dependencies
 
